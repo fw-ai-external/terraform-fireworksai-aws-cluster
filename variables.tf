@@ -71,3 +71,9 @@ variable "existing_ecr_repo_uris" {
   description = "URIs of existing Fireworks ECR repos. If supplied, these repositories will not be recreated."
   default     = null
 }
+
+variable "ec2_tags" {
+  type        = map(string)
+  description = "Tags to apply to all EC2 instances in the cluster."
+  default     = {}
+}

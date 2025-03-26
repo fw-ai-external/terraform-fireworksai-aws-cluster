@@ -73,9 +73,12 @@ resource "aws_launch_template" "launch_template" {
     http_put_response_hop_limit = 2
   }
   update_default_version = true
-  tags = {
-    "fireworks.ai:managed" = "true"
-  }
+  tags = merge(
+    {
+      "fireworks.ai:managed" = "true"
+    },
+    var.ec2_tags
+  )
 }
 
 resource "aws_eks_node_group" "system" {
