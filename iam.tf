@@ -584,7 +584,7 @@ data "aws_iam_policy_document" "vpc_flow_logger_trust_policy" {
 }
 
 resource "aws_iam_policy" "vpc_flow_logger_policy" {
-  count = local.create_core_roles ? 1 : 0
+  count = local.create_vpc ? 1 : 0
   name  = "FireworksVpcFlowLoggerPolicy"
   policy = jsonencode({
     "Version" : "2012-10-17",
