@@ -52,6 +52,7 @@ variable "existing_iam_roles" {
     cluster_node_role_arn           = string
     eks_cluster_role_arn            = string
     eks_cluster_autoscaler_role_arn = string
+    vpc_flow_logger_role_arn        = string
   })
   description = "ARNs of existing Fireworks system roles (e.g. from a different instance of this module). If supplied, these roles will not be recreated."
   default     = null

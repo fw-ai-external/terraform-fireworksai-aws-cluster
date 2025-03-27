@@ -106,7 +106,7 @@ resource "aws_iam_role" "inference_role" {
 }
 
 resource "aws_iam_role" "vpc_flow_logger" {
-  count               = local.create_vpc ? 1 : 0
+  count               = local.create_core_roles ? 1 : 0
   name                = "FireworksVpcFlowLogger"
   description         = "Role used to write to Fireworks VPC flow logs."
   assume_role_policy  = data.aws_iam_policy_document.vpc_flow_logger_trust_policy.json
@@ -267,7 +267,7 @@ data "aws_iam_policy_document" "inference_policy" {
 }
 
 resource "aws_iam_policy" "eks_load_balancer_controller_iam_policy" {
-  name = substr("FireworksEKSLoadBalancerControllerIAMPolicy-${var.cluster_name}", 0, 64)
+  name = substr("FireworksEKSLBControllerPolicy-${var.cluster_name}", 0, 64)
   # https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html
   # Copied from https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.5.4/docs/install/iam_policy.json
   policy = jsonencode({
@@ -584,7 +584,7 @@ data "aws_iam_policy_document" "vpc_flow_logger_trust_policy" {
 }
 
 resource "aws_iam_policy" "vpc_flow_logger_policy" {
-  count = local.create_vpc ? 1 : 0
+  count = local.create_core_roles ? 1 : 0
   name  = "FireworksVpcFlowLoggerPolicy"
   policy = jsonencode({
     "Version" : "2012-10-17",
