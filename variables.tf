@@ -13,8 +13,8 @@ variable "availability_zones" {
     private_cidr                            = optional(string) # Must be set if existing_subnet_id is not set
     node_count                              = number
     instance_type                           = string
-    capacity_reservation_resource_group_arn = optional(string) # Takes precedence over capacity_reservation_id if both are set
-    capacity_reservation_id                 = optional(string) # Gets overwritten by capacity_reservation_resource_group_arn if both are set
+    capacity_reservation_resource_group_arn = optional(string)
+    capacity_reservation_id                 = optional(string)
   }))
   description = "A mapping from availability zones to the configuration of a node group that will be created in that AZ"
 }
