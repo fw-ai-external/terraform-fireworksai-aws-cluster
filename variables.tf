@@ -15,6 +15,7 @@ variable "availability_zones" {
     instance_type                           = string
     capacity_reservation_resource_group_arn = optional(string)
     capacity_reservation_id                 = optional(string)
+    capacity_type                           = optional(string) # "ON_DEMAND" or "CAPACITY_BLOCK"
   }))
   description = "A mapping from availability zones to the configuration of a node group that will be created in that AZ"
 }

@@ -117,6 +117,7 @@ resource "aws_eks_node_group" "node_group" {
     id      = aws_launch_template.launch_template[each.key].id
     version = aws_launch_template.launch_template[each.key].latest_version
   }
+  capacity_type = try(var.availability_zones[each.key].capacity_type, "ON_DEMAND")
   node_role_arn = local.cluster_node_role_arn
   scaling_config {
     desired_size = each.value.node_count
