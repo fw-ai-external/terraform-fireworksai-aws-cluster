@@ -66,6 +66,7 @@ resource "aws_launch_template" "launch_template" {
   capacity_reservation_specification {
     capacity_reservation_target {
       capacity_reservation_resource_group_arn = each.value.capacity_reservation_resource_group_arn
+      capacity_reservation_id                 = each.value.capacity_reservation_id
     }
   }
   metadata_options {
