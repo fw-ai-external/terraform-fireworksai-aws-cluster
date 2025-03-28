@@ -55,7 +55,7 @@ resource "aws_flow_log" "vpc_flow_log" {
   count           = local.create_vpc ? 1 : 0
   vpc_id          = aws_vpc.fireworks_vpc[0].id
   traffic_type    = "ALL"
-  iam_role_arn    = aws_iam_role.vpc_flow_logger[0].arn
+  iam_role_arn    = try(var.existing_iam_roles.vpc_flow_logger_role_arn, aws_iam_role.vpc_flow_logger[0].arn)
   log_destination = aws_cloudwatch_log_group.vpc_flow_logs[0].arn
   tags = {
     "fireworks.ai:managed" = "true"
