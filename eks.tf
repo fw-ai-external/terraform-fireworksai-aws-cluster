@@ -35,7 +35,7 @@ data "tls_certificate" "oidc_certificate" {
 }
 
 resource "aws_launch_template" "system" {
-  instance_type = "t3.medium"
+  instance_type = "t3.2xlarge"
   metadata_options {
     http_tokens                 = "required"
     http_put_response_hop_limit = 2
@@ -66,6 +66,14 @@ resource "aws_launch_template" "launch_template" {
   capacity_reservation_specification {
     capacity_reservation_target {
       capacity_reservation_resource_group_arn = each.value.capacity_reservation_resource_group_arn
+      capacity_reservation_id                 = each.value.capacity_reservation_id
+    }
+  }
+  # Only set instance_market_options if the instance_market_type is not null
+  dynamic "instance_market_options" {
+    for_each = each.value.instance_market_type != null ? [1] : []
+    content {
+      market_type = each.value.instance_market_type
     }
   }
   metadata_options {
@@ -116,6 +124,7 @@ resource "aws_eks_node_group" "node_group" {
     id      = aws_launch_template.launch_template[each.key].id
     version = aws_launch_template.launch_template[each.key].latest_version
   }
+  capacity_type = try(each.value.capacity_type, "ON_DEMAND")
   node_role_arn = local.cluster_node_role_arn
   scaling_config {
     desired_size = each.value.node_count
