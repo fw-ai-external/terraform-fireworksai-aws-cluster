@@ -16,18 +16,24 @@ resource "aws_eks_cluster" "cluster" {
   }
   version                   = "1.29"
   enabled_cluster_log_types = ["api"]
-  tags = {
-    "fireworks.ai:managed" = "true"
-  }
+  tags = merge(
+    {
+      "fireworks.ai:managed" = "true"
+    },
+    var.eks_tags
+  )
 }
 
 resource "aws_iam_openid_connect_provider" "oidc_provider" {
   client_id_list  = ["sts.amazonaws.com"]
   thumbprint_list = [data.tls_certificate.oidc_certificate.certificates[0].sha1_fingerprint]
   url             = aws_eks_cluster.cluster.identity[0].oidc[0].issuer
-  tags = {
-    "fireworks.ai:managed" = "true"
-  }
+  tags = merge(
+    {
+      "fireworks.ai:managed" = "true"
+    },
+    var.eks_tags
+  )
 }
 
 data "tls_certificate" "oidc_certificate" {
@@ -41,9 +47,12 @@ resource "aws_launch_template" "system" {
     http_put_response_hop_limit = 2
   }
   update_default_version = true
-  tags = {
-    "fireworks.ai:managed" = "true"
-  }
+  tags = merge(
+    {
+      "fireworks.ai:managed" = "true"
+    },
+    var.eks_tags
+  )
 }
 
 resource "aws_launch_template" "launch_template" {
@@ -106,9 +115,12 @@ resource "aws_eks_node_group" "system" {
   labels = {
     "fireworks.ai/system" = "true"
   }
-  tags = {
-    "fireworks.ai:managed" = "true"
-  }
+  tags = merge(
+    {
+      "fireworks.ai:managed" = "true"
+    },
+    var.eks_tags
+  )
 }
 
 resource "aws_eks_node_group" "node_group" {
@@ -144,7 +156,10 @@ resource "aws_eks_node_group" "node_group" {
     # ourselves. An example usage is a DCGM exporter daemonset using this to target GPU nodes.
     "fireworks.ai/eks-gpu" = "true"
   }
-  tags = {
-    "fireworks.ai:managed" = "true"
-  }
+  tags = merge(
+    {
+      "fireworks.ai:managed" = "true"
+    },
+    var.eks_tags
+  )
 }
