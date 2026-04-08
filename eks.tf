@@ -14,7 +14,7 @@ resource "aws_eks_cluster" "cluster" {
   vpc_config {
     subnet_ids = [for _, v in local.availability_zone_subnets : v.subnet_id]
   }
-  version                   = "1.35"
+  version                   = "1.32"
   enabled_cluster_log_types = ["api"]
   tags = merge(
     {
