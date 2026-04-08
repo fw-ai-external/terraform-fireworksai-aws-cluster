@@ -46,6 +46,16 @@ resource "aws_launch_template" "system" {
     http_tokens                 = "required"
     http_put_response_hop_limit = 2
   }
+  tag_specifications {
+    resource_type = "instance"
+    tags = merge(
+      {
+        "fireworks.ai:managed" = "true"
+      },
+      var.ec2_tags,
+      var.eks_tags
+    )
+  }
   update_default_version = true
   tags = merge(
     {
@@ -89,12 +99,23 @@ resource "aws_launch_template" "launch_template" {
     http_tokens                 = "required"
     http_put_response_hop_limit = 2
   }
+  tag_specifications {
+    resource_type = "instance"
+    tags = merge(
+      {
+        "fireworks.ai:managed" = "true"
+      },
+      var.ec2_tags,
+      var.eks_tags
+    )
+  }
   update_default_version = true
   tags = merge(
     {
       "fireworks.ai:managed" = "true"
     },
-    var.ec2_tags
+    var.ec2_tags,
+    var.eks_tags
   )
 }
 
@@ -123,6 +144,7 @@ resource "aws_eks_node_group" "system" {
   )
 }
 
+# new AMI for k8s 1.35: AL2023_x86_64_NVIDIA
 resource "aws_eks_node_group" "node_group" {
   for_each = {
     for az, config in var.availability_zones :
@@ -131,7 +153,7 @@ resource "aws_eks_node_group" "node_group" {
 
   cluster_name    = aws_eks_cluster.cluster.name
   node_group_name = format("%s-%s", replace(each.value.instance_type, ".", "-"), each.key)
-  ami_type        = "AL2_x86_64_GPU"
+  ami_type        = "AL2_x86_64_GPU" #
   launch_template {
     id      = aws_launch_template.launch_template[each.key].id
     version = aws_launch_template.launch_template[each.key].latest_version
