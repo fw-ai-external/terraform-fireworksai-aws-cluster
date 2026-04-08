@@ -81,3 +81,9 @@ variable "ec2_tags" {
   description = "Tags to apply to all EC2 instances in the cluster."
   default     = {}
 }
+
+variable "eks_tags" {
+  type        = map(string)
+  description = "Tags to apply to all EKS resources in the cluster."
+  default     = {}
+}
